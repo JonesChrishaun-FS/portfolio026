@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/xjonchri/Desktop/Portfolio2026/portfolio-26/portfolio26/app/error.tsx"],"sourcesContent":["\"use client\";\n\nimport { useEffect } from \"react\";\n\nexport default function Error({\n  error,\n  reset,\n}: {\n  error: Error;\n  reset: () => void;\n}) {\n  useEffect(() => {\n    // Log the error to an error reporting service\n    /* eslint-disable no-console */\n    console.error(error);\n  }, [error]);\n\n  return (\n    <div>\n      <h2>Something went wrong!</h2>\n      <button\n        onClick={\n          // Attempt to recover by trying to re-render the segment\n          () => reset()\n        }\n      >\n        Try again\n      </button>\n    </div>\n  );\n}\n"],"names":["Error","error","reset","console","onClick"],"mappings":";;;;;AAEA;AAFA;;;AAIe,SAASA,MAAM,EAC5BC,KAAK,EACLC,KAAK,EAIN;IACC,IAAA,gRAAS,EAAC;QACR,8CAA8C;QAC9C,6BAA6B,GAC7BC,QAAQF,KAAK,CAACA;IAChB,GAAG;QAACA;KAAM;IAEV,qBACE,4SAAC;;0BACC,4SAAC;0BAAG;;;;;;0BACJ,4SAAC;gBACCG,SACE,wDAAwD;gBACxD,IAAMF;0BAET;;;;;;;;;;;;AAKP"}}]
+}
