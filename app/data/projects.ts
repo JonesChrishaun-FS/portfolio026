@@ -80,8 +80,16 @@ export const projects: Project[] = [
     results:
       "Brand recognition increased by 65%, featured in 3 major design publications, successfully launched in 50+ retail locations",
     images: [
-      "https://images.unsplash.com/photo-1561070791-2526d30994b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      "https://images.unsplash.com/photo-1676282831194-f7dcd46eafef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      "/Mr.Eatz2025 copy.png",
+      "/Mr.Eatz2025.png",
+      "/MR.EATZ POSTER 2024.png",
+      "/MR.EATZ POSTER 2025-01.png",
+      "/MR.EATZ Menu Layout - Front.png",
+      "/MR.EATZ Menu Layout - Front2.png",
+      "/MR.EATZ Menu Layout - Back.png",
+      "/MR.EATZ Menu Layout - Back3.png",
+      "/Coming Soon.png",
+      "/Mr. Eatz Insta.png",
     ],
     links: {
       behance: "https://behance.net",
@@ -144,7 +152,7 @@ export const projects: Project[] = [
   },
   {
     id: 5,
-    slug: "API/ CRUD Application",
+    slug: "api-crud-application",
     title: "Movie API Database",
     category: "Web Development",
     description: "TMDB API integration with comprehensive documentation",
@@ -253,55 +261,73 @@ export const projects: Project[] = [
         ],
       },
       {
-        title: "Wellness & Lifestyle",
+        title: "Landscaping & Repair",
         description: "Calming, organic logos for health and wellness brands",
         logos: [
           {
-            image:
-              "https://images.unsplash.com/photo-1605106325682-3482f7c1c9c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjcmVhdGl2ZSUyMGJyYW5kJTIwaWRlbnRpdHklMjBzeW1ib2xzfGVufDF8fHx8MTc3NjMyNzk3Nnww&ixlib=rb-4.1.0&q=80&w=800&utm_source=figma&utm_medium=referral",
+            image: "/Greenz2025_greenz3.png",
             description:
               "ZenFlow Yoga Studio - Calming brand identity for holistic wellness practices",
           },
           {
-            image:
-              "https://images.unsplash.com/photo-1773844914284-498c0e049b36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnZW9tZXRyaWMlMjBsb2dvJTIwbWFya3N8ZW58MXx8fHwxNzc2MzI3OTc2fDA&ixlib=rb-4.1.0&q=80&w=800&utm_source=figma&utm_medium=referral",
+            image: "/Greenz2025_greenz4.png",
             description:
               "Pure Skin - Organic skincare brand with natural, earthy aesthetic",
           },
           {
-            image:
-              "https://images.unsplash.com/photo-1626785774573-4b799315345d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800",
+            image: "/Greenz2025.png",
             description:
               "Mindful Living - Lifestyle brand promoting mindfulness and wellbeing",
           },
-        ],
-      },
-      {
-        title: "Professional Services",
-        description:
-          "Sophisticated, trustworthy marks for consultants and agencies",
-        logos: [
           {
-            image:
-              "https://images.unsplash.com/photo-1611162617474-5b21e879e113?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800",
+            image: "/Logos2025-01.png",
             description:
               "Apex Consulting - Executive business consultant branding with authority",
           },
           {
-            image:
-              "https://images.unsplash.com/photo-1758914224092-2aba0d39c923?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBsb2dvJTIwZGVzaWduJTIwYnJhbmRpbmd8ZW58MXx8fHwxNzc2MzI3OTc2fDA&ixlib=rb-4.1.0&q=80&w=800&utm_source=figma&utm_medium=referral",
+            image: "/Logos2025-02.png",
+            description:
+              "Apex Consulting - Executive business consultant branding with authority",
+          },
+          {
+            image: "/Logos2025-05.png",
+            description:
+              "Apex Consulting - Executive business consultant branding with authority",
+          },
+        ],
+      },
+      {
+        title: "Retail & Bar Services",
+        description:
+          "Sophisticated, trustworthy marks for consultants and agencies",
+        logos: [
+          {
+            image: "/Beaute2024.png",
+            description:
+              "Apex Consulting - Executive business consultant branding with authority",
+          },
+          {
+            image: "/Beaute2024(2).png",
             description:
               "Strategic Partners - Corporate advisory firm with professional, modern identity",
           },
           {
-            image:
-              "https://images.unsplash.com/photo-1605106325682-3482f7c1c9c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjcmVhdGl2ZSUyMGJyYW5kJTIwaWRlbnRpdHklMjBzeW1ib2xzfGVufDF8fHx8MTc3NjMyNzk3Nnww&ixlib=rb-4.1.0&q=80&w=800&utm_source=figma&utm_medium=referral",
+            image: "/Beaute2025.png",
             description:
               "Growth Analytics - Market research agency with analytical focus",
           },
           {
-            image:
-              "https://images.unsplash.com/photo-1773844914284-498c0e049b36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnZW9tZXRyaWMlMjBsb2dvJTIwbWFya3N8ZW58MXx8fHwxNzc2MzI3OTc2fDA&ixlib=rb-4.1.0&q=80&w=800&utm_source=figma&utm_medium=referral",
+            image: "/Jaded Nights-06.png",
+            description:
+              "Catalyst Ventures - Investment and venture capital firm identity",
+          },
+          {
+            image: "/Jaded Nights-09.png",
+            description:
+              "Catalyst Ventures - Investment and venture capital firm identity",
+          },
+          {
+            image: "/Jaded Nights-12.png",
             description:
               "Catalyst Ventures - Investment and venture capital firm identity",
           },
