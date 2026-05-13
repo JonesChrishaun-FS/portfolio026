@@ -19,15 +19,41 @@ interface ProjectDetailProps {
 }
 
 export default function ProjectDetail({ project }: ProjectDetailProps) {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState<{
+    gallery: { image: string; description?: string }[];
+    currentIndex: number;
+  } | null>(null);
 
-  const openLightbox = (imageSrc: string) => {
-    setLightboxImage(imageSrc);
+  const openLightbox = (
+    gallery: (string | { image: string; description?: string })[],
+    index: number,
+  ) => {
+    const normalized = gallery.map((item) =>
+      typeof item === "string" ? { image: item } : item,
+    );
+    setLightbox({ gallery: normalized, currentIndex: index });
   };
 
   const closeLightbox = () => {
-    setLightboxImage(null);
+    setLightbox(null);
+  };
+
+  const nextLightboxImage = () => {
+    if (!lightbox) return;
+    setLightbox({
+      ...lightbox,
+      currentIndex: (lightbox.currentIndex + 1) % lightbox.gallery.length,
+    });
+  };
+
+  const prevLightboxImage = () => {
+    if (!lightbox) return;
+    setLightbox({
+      ...lightbox,
+      currentIndex:
+        (lightbox.currentIndex - 1 + lightbox.gallery.length) %
+        lightbox.gallery.length,
+    });
   };
 
   const currentIndex = projects.findIndex((p) => p.slug === project.slug);
@@ -39,16 +65,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   const isLogoCollection = project.id === 6;
   const totalImages = project.images.length;
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % totalImages);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + totalImages) % totalImages);
-  };
-
   useEffect(() => {
-    setCurrentSlide(0);
     window.scrollTo(0, 0);
   }, [project.slug]);
 
@@ -136,7 +153,13 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                             whileHover={{ scale: 1.02 }}
                             transition={{ duration: 0.3 }}
                             onClick={() =>
-                              openLightbox(collection.logos[0].image)
+                              openLightbox(
+                                collection.logos.map((item) => ({
+                                  image: item.image,
+                                  description: item.description,
+                                })),
+                                0,
+                              )
                             }
                             title={`${collection.title} logo 1`}
                           >
@@ -153,7 +176,15 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                                 className="relative aspect-[4/3] overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
                                 whileHover={{ scale: 1.02 }}
                                 transition={{ duration: 0.3 }}
-                                onClick={() => openLightbox(logo.image)}
+                                onClick={() =>
+                                  openLightbox(
+                                    collection.logos.map((item) => ({
+                                      image: item.image,
+                                      description: item.description,
+                                    })),
+                                    idx + 1,
+                                  )
+                                }
                                 title={`${collection.title} logo ${idx + 2}`}
                               >
                                 <img
@@ -173,7 +204,13 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                             className="col-span-2 row-span-2 relative aspect-square overflow-hidden rounded-lg bg-black border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
                             whileHover={{ scale: 1.02 }}
                             onClick={() =>
-                              openLightbox(collection.logos[0].image)
+                              openLightbox(
+                                collection.logos.map((item) => ({
+                                  image: item.image,
+                                  description: item.description,
+                                })),
+                                0,
+                              )
                             }
                             title={`${collection.title} logo 1`}
                           >
@@ -188,7 +225,15 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                               key={idx}
                               className="relative aspect-square overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
                               whileHover={{ scale: 1.02 }}
-                              onClick={() => openLightbox(logo.image)}
+                              onClick={() =>
+                                openLightbox(
+                                  collection.logos.map((item) => ({
+                                    image: item.image,
+                                    description: item.description,
+                                  })),
+                                  idx + 1,
+                                )
+                              }
                               title={`${collection.title} logo ${idx + 2}`}
                             >
                               <img
@@ -208,7 +253,15 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                               key={idx}
                               className="relative aspect-[4/3] overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
                               whileHover={{ scale: 1.02 }}
-                              onClick={() => openLightbox(logo.image)}
+                              onClick={() =>
+                                openLightbox(
+                                  collection.logos.map((item) => ({
+                                    image: item.image,
+                                    description: item.description,
+                                  })),
+                                  idx,
+                                )
+                              }
                               title={`${collection.title} logo ${idx + 1}`}
                             >
                               <img
@@ -227,7 +280,13 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                             className="md:col-span-5 relative aspect-[4/3] overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
                             whileHover={{ scale: 1.02 }}
                             onClick={() =>
-                              openLightbox(collection.logos[0].image)
+                              openLightbox(
+                                collection.logos.map((item) => ({
+                                  image: item.image,
+                                  description: item.description,
+                                })),
+                                0,
+                              )
                             }
                             title={`${collection.title} logo 1`}
                           >
@@ -243,7 +302,13 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                                 className="relative aspect-[5/4] overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
                                 whileHover={{ scale: 1.02 }}
                                 onClick={() =>
-                                  openLightbox(collection.logos[1].image)
+                                  openLightbox(
+                                    collection.logos.map((item) => ({
+                                      image: item.image,
+                                      description: item.description,
+                                    })),
+                                    1,
+                                  )
                                 }
                                 title={`${collection.title} logo 2`}
                               >
@@ -261,7 +326,15 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                                   key={idx}
                                   className="relative aspect-square overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
                                   whileHover={{ scale: 1.02 }}
-                                  onClick={() => openLightbox(logo.image)}
+                                  onClick={() =>
+                                    openLightbox(
+                                      collection.logos.map((item) => ({
+                                        image: item.image,
+                                        description: item.description,
+                                      })),
+                                      idx + 2,
+                                    )
+                                  }
                                   title={`${collection.title} logo ${idx + 3}`}
                                 >
                                   <img
@@ -296,7 +369,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                     <div
                       key={idx}
                       className={`relative ${sizeClass} overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl cursor-pointer group`}
-                      onClick={() => openLightbox(img)}
+                      onClick={() => openLightbox(project.images, idx)}
                       title={`${project.title} image ${idx + 1}`}
                     >
                       <img
@@ -304,25 +377,55 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                         alt={`${project.title} ${idx + 1}`}
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="flex flex-wrap gap-2">
-                          {project.tags.map((tag, tagIdx) => (
-                            <span
-                              key={tagIdx}
-                              className="px-3 py-1 bg-white/90 text-zinc-900 text-xs font-medium rounded-full backdrop-blur-sm"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
                     </div>
                   );
                 })}
               </div>
             )}
           </motion.div>
+
+          {project.videos?.length ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mb-20"
+            >
+              <div className="flex flex-col gap-3 mb-8">
+                <p className="text-sm uppercase tracking-[0.3em] text-zinc-500">
+                  Video
+                </p>
+                <h3 className="text-3xl">Project Video</h3>
+              </div>
+
+              <div className="grid gap-6 lg:grid-cols-2">
+                {project.videos.map((video, idx) => (
+                  <div
+                    key={idx}
+                    className="overflow-hidden rounded-3xl bg-zinc-950 shadow-xl aspect-video"
+                  >
+                    <video
+                      controls
+                      playsInline
+                      poster={video.poster}
+                      className="w-full h-full bg-black object-contain"
+                    >
+                      <source
+                        src={video.src}
+                        type={video.type ?? "video/mp4"}
+                      />
+                      Your browser does not support the video tag.
+                    </video>
+                    {video.label ? (
+                      <div className="p-4 bg-zinc-900 text-zinc-200 text-sm">
+                        {video.label}
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
 
           <div className="grid md:grid-cols-2 gap-12 mb-16">
             <motion.div
@@ -509,7 +612,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
 
       <Footer />
 
-      {lightboxImage && (
+      {lightbox && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -523,7 +626,11 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="relative max-w-5xl w-full max-h-[90vh]"
+            className={
+              project.id === 6
+                ? "relative max-w-6xl w-full max-h-[90vh] overflow-auto flex gap-8 items-start"
+                : "relative max-w-5xl w-full max-h-[90vh] overflow-auto"
+            }
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -532,11 +639,108 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
             >
               <X className="w-6 h-6 text-white" />
             </button>
-            <img
-              src={lightboxImage}
-              alt="Lightbox image"
-              className="w-full h-full object-contain rounded-lg"
-            />
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                prevLightboxImage();
+              }}
+              className={
+                project.id === 6
+                  ? "hidden"
+                  : "absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 rounded-full transition-colors z-10"
+              }
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="w-5 h-5 text-white" />
+            </button>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                nextLightboxImage();
+              }}
+              className={
+                project.id === 6
+                  ? "hidden"
+                  : "absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 rounded-full transition-colors z-10"
+              }
+              aria-label="Next image"
+            >
+              <ChevronRight className="w-5 h-5 text-white" />
+            </button>
+
+            {project.id === 6 ? (
+              <>
+                <div className="flex-1 flex items-center justify-center min-h-96">
+                  <img
+                    src={lightbox.gallery[lightbox.currentIndex].image}
+                    alt={`${project.title} image ${lightbox.currentIndex + 1}`}
+                    className="w-full h-full object-contain rounded-lg"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      nextLightboxImage();
+                    }}
+                  />
+                </div>
+                {lightbox.gallery[lightbox.currentIndex].description && (
+                  <div className="flex-1 p-6 bg-white/10 backdrop-blur-sm rounded-lg self-center">
+                    <p className="text-white text-lg leading-relaxed">
+                      {lightbox.gallery[lightbox.currentIndex].description}
+                    </p>
+                    {lightbox.gallery.length > 1 && (
+                      <div className="mt-6 flex gap-4 justify-center">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            prevLightboxImage();
+                          }}
+                          className="inline-flex items-center justify-center gap-2 px-4 py-2 border border-white/30 text-white rounded-full hover:bg-white/10 transition"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </button>
+                        <span className="text-white/70 text-sm self-center">
+                          {lightbox.currentIndex + 1} /{" "}
+                          {lightbox.gallery.length}
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            nextLightboxImage();
+                          }}
+                          className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white/20 text-white rounded-full hover:bg-white/30 transition"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <img
+                  src={lightbox.gallery[lightbox.currentIndex].image}
+                  alt={`${project.title} image ${lightbox.currentIndex + 1}`}
+                  className={
+                    project.id === 2
+                      ? "w-full h-auto"
+                      : "w-full h-full object-contain rounded-lg"
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextLightboxImage();
+                  }}
+                />
+                {lightbox.gallery[lightbox.currentIndex].description && (
+                  <div className="mt-4 p-4 bg-white/10 backdrop-blur-sm rounded-lg">
+                    <p className="text-white text-center">
+                      {lightbox.gallery[lightbox.currentIndex].description}
+                    </p>
+                  </div>
+                )}
+              </>
+            )}
           </motion.div>
         </motion.div>
       )}

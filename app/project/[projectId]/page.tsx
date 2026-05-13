@@ -21,15 +21,15 @@ export default function ProjectDetail() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [previewImage, setPreviewImage] = useState<{
     image: string;
-    description: string;
+    description?: string;
     currentIndex: number;
-    gallery?: { image: string; description: string }[];
+    gallery?: { image: string; description?: string }[];
   } | null>(null);
 
   const project = projects.find((p) => p.slug === projectId);
 
   const openPreview = (
-    gallery: { image: string; description: string }[],
+    gallery: { image: string; description?: string }[],
     index: number,
   ) => {
     const item = gallery[index];

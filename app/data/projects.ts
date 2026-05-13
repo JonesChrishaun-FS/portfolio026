@@ -9,6 +9,13 @@ export interface LogoCollection {
   logos: Logo[];
 }
 
+export interface ProjectVideo {
+  src: string;
+  poster?: string;
+  label?: string;
+  type?: string;
+}
+
 export interface Project {
   id: number;
   slug: string;
@@ -17,6 +24,7 @@ export interface Project {
   description: string;
   image: string;
   tags: string[];
+  videos?: ProjectVideo[];
   fullDescription: string;
   challenge: string;
   solution: string;
@@ -71,6 +79,14 @@ export const projects: Project[] = [
     image:
       "https://images.unsplash.com/photo-1561070791-2526d30994b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     tags: ["Branding", "Print", "Digital"],
+    videos: [
+      {
+        src: "/Mr.EATZ.mp4",
+        poster: "/Mr.Eatz2025 copy.png",
+        label: "Brand identity overview",
+        type: "video/mp4",
+      },
+    ],
     fullDescription:
       "A comprehensive brand identity for an eco-conscious lifestyle brand focused on sustainable home goods. The project included logo design, color palette, typography system, packaging design, and brand guidelines.",
     challenge:
