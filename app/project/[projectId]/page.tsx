@@ -22,9 +22,50 @@ export default function ProjectDetail() {
   const [previewImage, setPreviewImage] = useState<{
     image: string;
     description: string;
+    currentIndex: number;
+    gallery?: { image: string; description: string }[];
   } | null>(null);
 
   const project = projects.find((p) => p.slug === projectId);
+
+  const openPreview = (
+    gallery: { image: string; description: string }[],
+    index: number,
+  ) => {
+    const item = gallery[index];
+    setPreviewImage({
+      image: item.image,
+      description: item.description,
+      gallery,
+      currentIndex: index,
+    });
+  };
+
+  const goToPreviewImage = (index: number) => {
+    if (!previewImage?.gallery) return;
+    const item = previewImage.gallery[index];
+    setPreviewImage({
+      ...previewImage,
+      image: item.image,
+      description: item.description,
+      currentIndex: index,
+    });
+  };
+
+  const nextPreviewImage = () => {
+    if (!previewImage?.gallery) return;
+    const nextIndex =
+      (previewImage.currentIndex + 1) % previewImage.gallery.length;
+    goToPreviewImage(nextIndex);
+  };
+
+  const prevPreviewImage = () => {
+    if (!previewImage?.gallery) return;
+    const prevIndex =
+      (previewImage.currentIndex - 1 + previewImage.gallery.length) %
+      previewImage.gallery.length;
+    goToPreviewImage(prevIndex);
+  };
 
   // Reset slide when project changes
   useEffect(() => {
@@ -87,7 +128,7 @@ export default function ProjectDetail() {
           >
             <Link
               href="/#work"
-              className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8 group"
+              className="inline-flex items-center gap-2 text-yellow-400 hover:text-white transition-colors mb-8 group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               Back to Work
@@ -125,7 +166,7 @@ export default function ProjectDetail() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.1 * collectionIdx }}
-                    className="bg-zinc-50 rounded-2xl overflow-hidden"
+                    className=" rounded-2xl overflow-hidden"
                   >
                     {/* Collection Header */}
                     <div className="p-8 pb-6 border-b border-zinc-200">
@@ -138,29 +179,39 @@ export default function ProjectDetail() {
                     {/* Logo Collage - Different layouts for each collection */}
                     <div className="p-8">
                       {collectionIdx === 0 && (
-                        /* Tech Startups - 2x2 Grid */
-                        <div className="grid grid-cols-2 gap-4">
-                          {collection.logos.map((logo, idx) => (
-                            <motion.div
-                              key={idx}
-                              className="relative aspect-square overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
-                              whileHover={{ scale: 1.02 }}
-                              transition={{ duration: 0.3 }}
-                              onClick={() =>
-                                setPreviewImage({
-                                  image: logo.image,
-                                  description: logo.description,
-                                })
-                              }
-                            >
-                              <img
-                                src={logo.image}
-                                alt={`${collection.title} logo ${idx + 1}`}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </motion.div>
-                          ))}
+                        /* Tech Startups - Hero + stacked cards */
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.8fr_1fr]">
+                          <motion.div
+                            className="relative aspect-[5/4] overflow-hidden rounded-lg bg-yellow-200 border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
+                            whileHover={{ scale: 1.02 }}
+                            transition={{ duration: 0.3 }}
+                            onClick={() => openPreview(collection.logos, 0)}
+                          >
+                            <img
+                              src={collection.logos[0].image}
+                              alt={`${collection.title} logo 1`}
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </motion.div>
+                          <div className="grid grid-cols-1 gap-4">
+                            {collection.logos.slice(1).map((logo, idx) => (
+                              <motion.div
+                                key={idx}
+                                className="relative aspect-[4/3] overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
+                                whileHover={{ scale: 1.02 }}
+                                transition={{ duration: 0.3 }}
+                                onClick={() =>
+                                  openPreview(collection.logos, idx + 1)
+                                }
+                              >
+                                <img
+                                  src={logo.image}
+                                  alt={`${collection.title} logo ${idx + 2}`}
+                                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                              </motion.div>
+                            ))}
+                          </div>
                         </div>
                       )}
 
@@ -168,14 +219,9 @@ export default function ProjectDetail() {
                         /* Food & Beverage - Asymmetric Layout */
                         <div className="grid grid-cols-3 gap-4">
                           <motion.div
-                            className="col-span-2 row-span-2 relative aspect-square overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
+                            className="col-span-2 row-span-2 relative aspect-square overflow-hidden rounded-lg bg-black border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
                             whileHover={{ scale: 1.02 }}
-                            onClick={() =>
-                              setPreviewImage({
-                                image: collection.logos[0].image,
-                                description: collection.logos[0].description,
-                              })
-                            }
+                            onClick={() => openPreview(collection.logos, 0)}
                           >
                             <img
                               src={collection.logos[0].image}
@@ -189,10 +235,7 @@ export default function ProjectDetail() {
                               className="relative aspect-square overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
                               whileHover={{ scale: 1.02 }}
                               onClick={() =>
-                                setPreviewImage({
-                                  image: logo.image,
-                                  description: logo.description,
-                                })
+                                openPreview(collection.logos, idx + 1)
                               }
                             >
                               <img
@@ -206,19 +249,14 @@ export default function ProjectDetail() {
                       )}
 
                       {collectionIdx === 2 && (
-                        /* Wellness & Lifestyle - Horizontal Strip */
+                        /* Landscaping & Repair - Horizontal Strip */
                         <div className="grid grid-cols-3 gap-4">
                           {collection.logos.map((logo, idx) => (
                             <motion.div
                               key={idx}
                               className="relative aspect-[4/3] overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
                               whileHover={{ scale: 1.02 }}
-                              onClick={() =>
-                                setPreviewImage({
-                                  image: logo.image,
-                                  description: logo.description,
-                                })
-                              }
+                              onClick={() => openPreview(collection.logos, idx)}
                             >
                               <img
                                 src={logo.image}
@@ -231,17 +269,12 @@ export default function ProjectDetail() {
                       )}
 
                       {collectionIdx === 3 && (
-                        /* Professional Services - Masonry Layout */
-                        <div className="grid grid-cols-4 gap-4">
+                        /* Retail & Bar Services - Advanced mosaic layout */
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-8">
                           <motion.div
-                            className="col-span-2 relative aspect-square overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
+                            className="md:col-span-5 relative aspect-[4/3] overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
                             whileHover={{ scale: 1.02 }}
-                            onClick={() =>
-                              setPreviewImage({
-                                image: collection.logos[0].image,
-                                description: collection.logos[0].description,
-                              })
-                            }
+                            onClick={() => openPreview(collection.logos, 0)}
                           >
                             <img
                               src={collection.logos[0].image}
@@ -249,41 +282,40 @@ export default function ProjectDetail() {
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />
                           </motion.div>
-                          <motion.div
-                            className="col-span-2 relative aspect-square overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
-                            whileHover={{ scale: 1.02 }}
-                            onClick={() =>
-                              setPreviewImage({
-                                image: collection.logos[1].image,
-                                description: collection.logos[1].description,
-                              })
-                            }
-                          >
-                            <img
-                              src={collection.logos[1].image}
-                              alt={`${collection.title} logo 2`}
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                          </motion.div>
-                          {collection.logos.slice(2).map((logo, idx) => (
-                            <motion.div
-                              key={idx}
-                              className="col-span-2 relative aspect-[2/1] overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
-                              whileHover={{ scale: 1.02 }}
-                              onClick={() =>
-                                setPreviewImage({
-                                  image: logo.image,
-                                  description: logo.description,
-                                })
-                              }
-                            >
-                              <img
-                                src={logo.image}
-                                alt={`${collection.title} logo ${idx + 3}`}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                              />
-                            </motion.div>
-                          ))}
+                          <div className="md:col-span-3 grid gap-4">
+                            {collection.logos[1] && (
+                              <motion.div
+                                className="relative aspect-[5/4] overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
+                                whileHover={{ scale: 1.02 }}
+                                onClick={() => openPreview(collection.logos, 1)}
+                              >
+                                <img
+                                  src={collection.logos[1].image}
+                                  alt={`${collection.title} logo 2`}
+                                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                              </motion.div>
+                            )}
+
+                            <div className="grid grid-cols-2 gap-4">
+                              {collection.logos.slice(2, 4).map((logo, idx) => (
+                                <motion.div
+                                  key={idx}
+                                  className="relative aspect-square overflow-hidden rounded-lg bg-white border border-zinc-200 group hover:shadow-xl transition-all duration-300 cursor-pointer"
+                                  whileHover={{ scale: 1.02 }}
+                                  onClick={() =>
+                                    openPreview(collection.logos, idx + 2)
+                                  }
+                                >
+                                  <img
+                                    src={logo.image}
+                                    alt={`${collection.title} logo ${idx + 3}`}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                  />
+                                </motion.div>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -291,19 +323,37 @@ export default function ProjectDetail() {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-6">
-                {project.images.map((img, idx) => (
-                  <div
-                    key={idx}
-                    className="relative aspect-video overflow-hidden bg-zinc-100 rounded-lg"
-                  >
-                    <img
-                      src={img}
-                      alt={`${project.title} ${idx + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
+              <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-6">
+                {project.images.map((img, idx) => {
+                  // Bento grid layout with different sizes
+                  const bentoSizes = [
+                    "lg:col-span-3 lg:row-span-2", // Large hero
+                    "lg:col-span-2 lg:row-span-1", // Medium
+                    "lg:col-span-1 lg:row-span-2", // Tall
+                    "lg:col-span-2 lg:row-span-2", // Large square
+                    "lg:col-span-1 lg:row-span-1", // Small
+                    "lg:col-span-1 lg:row-span-1", // Small
+                  ];
+                  const sizeClass = bentoSizes[idx % bentoSizes.length];
+
+                  return (
+                    <div
+                      key={idx}
+                      className={`relative ${sizeClass} overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl cursor-pointer group`}
+                      onClick={() =>
+                        openPreview(
+                          project.images.map((img) => ({
+                            image: img,
+                          })),
+                          idx,
+                        )
+                      }
+                    >
+                      <img src={img} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                  );
+                })}
               </div>
             )}
           </motion.div>
@@ -516,7 +566,7 @@ export default function ProjectDetail() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="relative max-w-4xl w-full bg-white rounded-lg overflow-hidden shadow-2xl"
+            className="relative max-w-5xl w-full bg-white rounded-lg overflow-hidden shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -525,16 +575,55 @@ export default function ProjectDetail() {
             >
               <X className="w-6 h-6 text-white" />
             </button>
-            <div className="max-h-[90vh] overflow-y-auto">
-              <img
-                src={previewImage.image}
-                alt="Preview"
-                className="w-full h-auto object-contain bg-zinc-50"
-              />
-              <div className="p-8 bg-white">
-                <p className="text-lg text-zinc-800 leading-relaxed font-medium">
-                  {previewImage.description}
-                </p>
+            <div className="max-h-[90vh] overflow-y-auto p-6">
+              <div className="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+                <img
+                  src={previewImage.image}
+                  alt="Preview"
+                  className="w-full max-h-[80vh] object-contain bg-zinc-50 rounded-lg cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextPreviewImage();
+                  }}
+                />
+                <div className="flex flex-col justify-between rounded-lg border border-zinc-200 bg-white p-8">
+                  <div>
+                    <p className="text-sm uppercase tracking-[0.2em] text-zinc-500 mb-4">
+                      Preview description
+                    </p>
+                    <p className="text-lg text-zinc-800 leading-relaxed font-medium">
+                      {previewImage.description}
+                    </p>
+                  </div>
+                  {previewImage.gallery?.length > 1 && (
+                    <div className="grid gap-3 mt-8 sm:grid-cols-[auto_1fr_auto] sm:items-center">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          prevPreviewImage();
+                        }}
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 border border-zinc-300 text-zinc-900 rounded-full bg-white shadow-sm transition hover:border-zinc-400 hover:bg-zinc-50"
+                        aria-label="Previous logo"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <div className="text-center text-sm text-zinc-500">
+                        Logo {previewImage.currentIndex + 1} of{" "}
+                        {previewImage.gallery.length}
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          nextPreviewImage();
+                        }}
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 bg-zinc-900 text-white rounded-full shadow-sm hover:bg-zinc-800 transition"
+                        aria-label="Next logo"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </motion.div>
